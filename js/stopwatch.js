@@ -1,4 +1,4 @@
-function Stopwatch() {
+function Stopwatch(elem) {
 
     // Private Variables
     var time = 0;
@@ -7,8 +7,11 @@ function Stopwatch() {
 
     // Private Functions
     function update(){
-        time += delta();
+        if(this.isOn){
+            time += delta();
+        }
         var formattedTime = timeFormatter(time);
+        elem.textContent = formattedTime;
         // Test
         // console.log(formattedTime);
     };
@@ -46,7 +49,7 @@ function Stopwatch() {
 
     this.start = function(){
         if(!this.isOn){
-            interval = setInterval(update, 10);
+            interval = setInterval(update.bind(this), 10);
             offset = Date.now();
             this.isOn = true;
         }
@@ -61,6 +64,9 @@ function Stopwatch() {
     };
 
     this.reset = function(){
-        time = 0;
+        if(!this.isOn){
+            time = 0;
+            update();
+        };
     };
 }
